@@ -108,7 +108,17 @@ handle_call_test_()->
    ?_assertEqual({reply,
                 {ok,[joe,sally,grace]},
            [joe,sally,grace]},friends_storage:handle_call(list,somewhere,[joe,sally,grace]))%happy path
+          
    ].
+handle_cast_test_()->
+  [
+    ?_assertEqual({noreply, [joe,sally,grace]}, friends_storage:handle_cast({add, joe}, [sally, grace])),
+    friends_storage:handle_cast({add, joe}),
+    ?_assertEqual({reply,
+                {ok,[joe,sally,grace]},
+           [joe,sally,grace]},friends_storage:handle_call(list,somewhere,[joe,sally,grace]))
+ 
+  ].
 
 % component_level_test_()->{
 %  setup,
