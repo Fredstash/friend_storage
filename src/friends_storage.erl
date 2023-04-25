@@ -94,6 +94,11 @@ handle_call(list, _From, List) ->
 %%% gen_server callbacks
 %%% the default behavior here is sufficient for this example.
 %%%--------
+handle_cast({add, Name}, State) -> {noreply, [Name] ++ State};
+handle_cast({remove, Name}, State) -> {noreply,  State -- [Name]};
+% handle_cast({remove, Name}, State) -> {noreply, lists:delete(Name, State)};
+handle_cast(clear, _State) -> {noreply, []};
+handle_cast(stop, State) ->  terminate(normal, State), {noreply, normal};
 handle_cast(_Msg, State) -> {noreply, State}.
 handle_info(_Info, State) -> {noreply, State}.
 terminate(_Reason, _State) -> ok.
@@ -113,10 +118,13 @@ handle_call_test_()->
 handle_cast_test_()->
   [
     ?_assertEqual({noreply, [joe,sally,grace]}, friends_storage:handle_cast({add, joe}, [sally, grace])),
-    friends_storage:handle_cast({add, joe}),
-    ?_assertEqual({reply,
-                {ok,[joe,sally,grace]},
-           [joe,sally,grace]},friends_storage:handle_call(list,somewhere,[joe,sally,grace]))
+    ?_assertEqual({noreply, []}, friends_storage:handle_cast(clear, [joe, sally, grace])),
+    ?_assertEqual({noreply, [sally,grace]}, friends_storage:handle_cast({remove, joe}, [joe, sally, grace])),
+    ?_assertEqual({noreply, normal}, friends_storage:handle_cast(stop, [joe, sally, grace]))
+    % friends_storage:handle_cast({add, joe}),
+    % ?_assertEqual({reply,
+    %             {ok,[joe,sally,grace]},
+    %        [joe,sally,grace]},friends_storage:handle_call(list,somewhere,[joe,sally,grace]))
  
   ].
 
