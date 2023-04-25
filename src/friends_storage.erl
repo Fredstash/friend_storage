@@ -43,20 +43,20 @@ start(Registration_scope,Name_to_register) ->
 
 %% @doc The <kbd>stop/0</kbd> function causes a graceful stop of the gen_server.
 stop(Registered_name)  -> 
-  gen_server:call(Registered_name, stop).
+  gen_server:cast(Registered_name, stop).
 
 
 %%@doc The <kbd>add/1</kbd> function has as its value the sum of all elements of the parameter of type list. The list can be empty.
 add(Registered_name,Friend) -> 
-  gen_server:call(Registered_name,{add,Friend}).
+  gen_server:cast(Registered_name,{add,Friend}).
 %%@doc The <kbd>list/1</kbd> function has as its value the entire list of friends. The list can be empty.
 list(Registered_name) -> 
   gen_server:call(Registered_name,list).
 %%@doc The <kbd>divide/2</kbd> function returns the quotient of the dividend, the first parameter, and the divisor, the second parameter.
 remove(Registered_name,Friend) -> 
-  gen_server:call(Registered_name,{remove,Friend}).
+  gen_server:cast(Registered_name,{remove,Friend}).
 remove_all(Registered_name) -> 
-  gen_server:call(Registered_name,clear).
+  gen_server:cast(Registered_name,clear).
 
 
 %%%--------
